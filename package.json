@@ -1,5 +1,5 @@
 {
-  "name": "serverless-swipe-ix",
+  "name": "serverless-dynamodb-demo",
   "version": "1.0.0",
   "description": "Challenge to create a functional APIGW using the Serverless Framework",
   "main": "handler.js",
@@ -15,5 +15,13 @@
   },
   "devDependencies": {
     "serverless-openapi-documentation": "^0.4.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kentisza/Serverless-DynamoDB-Demo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kentisza/Serverless-DynamoDB-Demo/issues"
+  },
+  "homepage": "https://github.com/kentisza/Serverless-DynamoDB-Demo#readme"
 }
