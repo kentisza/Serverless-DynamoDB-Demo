@@ -25,9 +25,20 @@ npm install --production=false
 serverless deploy --stage stage_name
 ```
 
+## To generate OpenAPI 3.0 Specification for the API Gateway enpoints:
+
+1) (Optionally) Resources are defined in 'serverless.doc.yml', this can be edited
+2) Use the openapi-documentation plugin to generate the specification file
+```console
+serverless openapi generate -o ./openapi-documentation/openapi.yml
+```
+
 ## To remove resources
 
 1) Empty S3 Bucket 'serverless-s3-apigw-bucket-7354
+```console
+aws s3 rm s3://bucket-name/doc --recursive
+```
 
 2) Delete resources
 ```console
