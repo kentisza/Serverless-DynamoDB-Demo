@@ -7,18 +7,15 @@ module.exports.generate = function (event, context, callback) {
     var docClient = new AWS.DynamoDB.DocumentClient();
     var eventdata = JSON.parse(event.body);
     var order = eventdata.sortorder;
-    var block = eventdata.pagination;
+    var numitems = eventdata.pagination;
     var table = process.env.DynamoDB_Table;
     var bucketkey = process.env.S3_Bucket;
-    console.log("Querying for all files in the S3 bucket from DynamoDB database");
+    console.log("Querying for files in the S3 bucket from DynamoDB database");
     if (order == "ascending") {
         var sif = false;
     }
     if (order == "descending") {
         var sif = true;
-    }
-    else {
-        console.log("sortorder must be ascending or descending.");
     }
     var params = {
         TableName: table,
@@ -26,7 +23,7 @@ module.exports.generate = function (event, context, callback) {
         ExpressionAttributeValues: {
             ":bkey": bucketkey
         },
-        Limit: block,
+        Limit: numitems,
         ScanIndexForward: sif
     };
     console.log(params);
