@@ -27,8 +27,8 @@ serverless deploy --stage stage_name
 
 ## To generate OpenAPI 3.0 Specification for the API Gateway enpoints:
 
-1) (Optionally) Resources are defined in 'serverless.doc.yml', this can be edited
-2) Use the openapi-documentation plugin to generate the specification file
+1) (Optionally) Edit definitions for API resources which are defined in 'serverless.doc.yml'
+2) Use the openapi-documentation plugin to generate the OpenAPI specification documentation file 'openapi.yml'
 ```console
 serverless openapi generate -o ./openapi-documentation/openapi.yml
 ```
