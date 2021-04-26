@@ -20,7 +20,7 @@ npm install --production=false
 
 ## Execute
 
-1) Deploy resources
+1) Deploy resources ('--stage ...' is optional)
 ```console
 serverless deploy --stage stage_name
 ```
