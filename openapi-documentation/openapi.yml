@@ -1,0 +1,95 @@
+openapi: 3.0.0
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+    PSUCreateRequest:
+      type: object
+      properties:
+        url:
+          type: string
+    RecordList:
+      type: object
+      properties:
+        bucketname:
+          type: string
+        objectname:
+          type: string
+        mimetype:
+          type: string
+        uploadtimedate:
+          type: string
+    Record:
+      type: object
+      properties:
+        bucketname:
+          type: string
+        name:
+          type: string
+  securitySchemes: {}
+info:
+  title: Serverless-DynamoDB-Demo
+  description: >-
+    Uses the Serverless Framework to create a (Lambda & API Gateway based)
+    serverless API to record S3 objects in DynamoDB
+  version: '1.0'
+paths:
+  //v1/genpsu:
+    post:
+      operationId: genpsu
+      summary: Generate Pre-Signed URL
+      description: Creates an S3 pre-signed URL
+      responses:
+        '201':
+          description: A pre-signed URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PSUCreateRequest'
+        '500':
+          description: An error message when creating a pre-signed URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  //v1/getlist:
+    post:
+      operationId: getrecordlist
+      summary: Retrieve a List of S3 Objects from DynamoDB
+      description: >-
+        Generates a list of S3 objects and their attributes sorted by upload
+        time
+      responses:
+        '201':
+          description: A list of S3 objects and attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PSUCreateRequest'
+        '500':
+          description: An error occurred when fetching the list of objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  //v1/getitem:
+    post:
+      operationId: getrecord
+      summary: Retrieve an S3 Object from DynamoDB
+      description: Generates an S3 objects and its attributes
+      responses:
+        '201':
+          description: An S3 object and attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PSUCreateRequest'
+        '500':
+          description: An error occurred when fetching the object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

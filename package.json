@@ -1,0 +1,19 @@
+{
+  "name": "serverless-swipe-ix",
+  "version": "1.0.0",
+  "description": "Challenge to create a functional APIGW using the Serverless Framework",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kent Solomon",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": ">=14.14.41",
+    "aws-sdk": "^2.892.0",
+    "typescript": ">=4.2.4"
+  },
+  "devDependencies": {
+    "serverless-openapi-documentation": "^0.4.0"
+  }
+}

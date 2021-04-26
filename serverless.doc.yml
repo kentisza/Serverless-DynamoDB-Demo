@@ -1,0 +1,125 @@
+documentation:
+  version: '1.0'
+  title: 'Serverless-DynamoDB-Demo'
+  description: 'Uses the Serverless Framework to create a (Lambda & API Gateway based) serverless API to record S3 objects in DynamoDB'
+  models:
+    - name: "ErrorResponse"
+      description: "This is an error"
+      contentType: "application/json"
+      schema:
+        type: "object"
+        properties:
+          error:
+            type: "string"
+    - name: "PSUCreateRequest"
+      description: "Model for an S3 pre-signed URL"
+      contentType: "application/json"
+      schema:
+        type: "object"
+        properties:
+          url:
+            type: "string"
+    - name: "RecordList"
+      description: "Model for a list of the S3 objects and their attributes"
+      contentType: "application/json"
+      schema:
+        type: "object"
+        properties:
+          bucketname:
+            type: "string"
+          objectname:
+            type: "string"
+          mimetype:
+            type: "string"
+          uploadtimedate:
+            type: "string"
+    - name: "Record"
+      description: "Model for a list of the S3 objects and their attributes"
+      contentType: "application/json"
+      schema:
+        type: "object"
+        properties:
+          bucketname:
+            type: "string"
+          name:
+            type: "string"
+
+endpoints:
+  genpsu:
+    summary: "Generate Pre-Signed URL"
+    description: "Creates an S3 pre-signed URL"
+    requestBody:
+      description: "An object name to be used for upload to S3"
+    requestModels:
+      application/json: "PutDocumentRequest"
+    queryParams:
+      - name: "object_key"
+        description: "The file name of the S3 object for which an S3 URL will be created"
+        schema:
+        type: "string"
+        pattern: "^[-a-z0-9_]+$"
+        required: true
+    methodResponses:
+      - statusCode: 201
+        responseBody:
+          description: "A pre-signed URL"
+        responseModels:
+          application/json: "PSUCreateRequest"
+      - statusCode: 500
+        responseBody:
+          description: "An error message when creating a pre-signed URL"
+        responseModels:
+          application/json: "ErrorResponse"
+  getrecordlist:
+    summary: "Retrieve a List of S3 Objects from DynamoDB"
+    description: "Generates a list of S3 objects and their attributes sorted by upload time"
+    requestBody:
+      description: "The sortorder and pagination of the results"
+    requestModels:
+      application/json: "PutDocumentRequest"
+    queryParams:
+      - name: "sortorder"
+        description: "Whether the results should be returned in ascending or descending order of upload time"
+        schema:
+        type: "string"
+        enum:
+          - "ascending"
+          - "descending"
+        required: true
+    methodResponses:
+      - statusCode: 201
+        responseBody:
+          description: "A list of S3 objects and attributes"
+        responseModels:
+          application/json: "PSUCreateRequest"
+      - statusCode: 500
+        responseBody:
+          description: "An error occurred when fetching the list of objects"
+        responseModels:
+          application/json: "ErrorResponse"
+  getrecord:
+    summary: "Retrieve an S3 Object from DynamoDB"
+    description: "Generates an S3 objects and its attributes"
+    requestBody:
+      description: "The sortorder and pagination of the results"
+    requestModels:
+      application/json: "PutDocumentRequest"
+    queryParams:
+      - name: "name"
+        description: "The name of the object which should be retrieved from DynamoDB"
+        schema:
+        type: "string"
+        pattern: "^[-a-z0-9_]+$"
+        required: true
+    methodResponses:
+      - statusCode: 201
+        responseBody:
+          description: "An S3 object and attributes"
+        responseModels:
+          application/json: "PSUCreateRequest"
+      - statusCode: 500
+        responseBody:
+          description: "An error occurred when fetching the object"
+        responseModels:
+          application/json: "ErrorResponse"         
+  

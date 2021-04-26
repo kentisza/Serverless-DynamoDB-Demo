@@ -1,0 +1,195 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: serverless-s3-apigw
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '2'
+
+custom:
+  bucketName: ${self:service}-bucket-7354
+  tableName: ${self:service}-table
+  awsRegion: eu-west-1
+  documentation: ${file(serverless.doc.yml):documentation}
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+  region: ${self:custom.awsRegion}
+  environment:
+    DynamoDB_Table: ${self:custom.tableName}
+    S3_Bucket: ${self:custom.bucketName}
+    aws_Region: ${self:custom.awsRegion}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+          Resource:
+            - arn:aws:logs:*:*:* # allow replicated lambdas to create logs
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+            - s3:ListBucket
+            - s3:ListBucketVersions
+          Resource:
+            - arn:aws:s3:::${self:custom.bucketName}
+            - arn:aws:s3:::${self:custom.bucketName}/*
+        - Effect: Allow
+          Action: # Gives permission to DynamoDB tables
+            - dynamodb:DescribeTable
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: 
+            - 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.tableName}'
+            - 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.tableName}/*'
+      
+plugins:
+  - serverless-openapi-documentation
+#  - serverless-pseudo-parameters
+
+
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+#package:
+#  patterns:
+#    - '!exclude-me.js'
+#    - '!exclude-me-dir/**'
+#    - include-me.js
+#    - include-me-dir/**
+
+functions:
+  genpsu:
+    handler: genpsu.generate
+    events:
+      - http:
+          path: /v1/genpsu
+          method: post
+          documentation: ${file(serverless.doc.yml):endpoints.genpsu}
+  genrecord:
+    handler: genrecord.generate
+    events: 
+      - s3:
+          bucket: ${self:custom.bucketName}
+          event: s3:ObjectCreated:*
+  getrecordlist:
+    handler: getrecordlist.generate
+    events:
+      - http:
+          path: /v1/getlist
+          method: post
+          documentation: ${file(serverless.doc.yml):endpoints.getrecordlist}
+  getrecord:
+    handler: getrecord.generate
+    events:
+      - http:
+          path: /v1/getitem
+          method: post
+          documentation: ${file(serverless.doc.yml):endpoints.getrecord}
+        
+#    The following are a few example events you can configure
+#    NOTE: Please make sure to change your handler code to work with those events
+#    Check the event documentation for details
+#    events:
+#      - httpApi:
+#          path: /users/create
+#          method: get
+#      - websocket: $connect
+#      - s3: ${env:BUCKET}
+#      - schedule: rate(10 minutes)
+#      - sns: greeter-topic
+#      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
+#      - alexaSkill: amzn1.ask.skill.xx-xx-xx-xx
+#      - alexaSmartHome: amzn1.ask.skill.xx-xx-xx-xx
+#      - iot:
+#          sql: "SELECT * FROM 'some_topic'"
+#      - cloudwatchEvent:
+#          event:
+#            source:
+#              - "aws.ec2"
+#            detail-type:
+#              - "EC2 Instance State-change Notification"
+#            detail:
+#              state:
+#                - pending
+#      - cloudwatchLog: '/aws/lambda/hello'
+#      - cognitoUserPool:
+#          pool: MyUserPool
+#          trigger: PreSignUp
+#      - alb:
+#          listenerArn: arn:aws:elasticloadbalancing:us-east-1:XXXXXX:listener/app/my-load-balancer/50dc6c495c0c9188/
+#          priority: 1
+#          conditions:
+#            host: example.com
+#            path: /hello
+
+#    Define function environment variables here
+
+
+# you can add CloudFormation resource templates here
+resources:
+  Resources:
+    DynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions:
+          - AttributeName: bucketname
+            AttributeType: S
+          - AttributeName: uploadtimedate
+            AttributeType: S
+        KeySchema:
+          - AttributeName: bucketname
+            KeyType: HASH
+          - AttributeName: uploadtimedate
+            KeyType: RANGE  
+        BillingMode: PAY_PER_REQUEST
+
+  Outputs:
+     NewOutput:
+       Description: "S3 Bucket Name - Empty before deletion"
+       Value: ${self:custom.bucketName}
