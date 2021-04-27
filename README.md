@@ -52,4 +52,4 @@ serverless remove --stage stage_name
   
     "An error occurred: ... - The bucket you tried to delete is not empty "
   
-  Empty the Bucket and delete the CloudFormation stack.
+  Empty the Bucket (step 1) and delete the CloudFormation stack 'serverless-s3-apigw-stage_name' (or 'serverless-s3-apigw' if no stage name used).
