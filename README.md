@@ -39,7 +39,7 @@ serverless openapi generate -o ./openapi-documentation/openapi.yml
 
 1) Empty S3 Bucket 'serverless-s3-apigw-bucket-7354'
 ```console
-aws s3 rm s3://'serverless-s3-apigw-bucket-7354/ --recursive
+aws s3 rm s3://serverless-s3-apigw-bucket-7354/ --recursive
 ```
 
 2) Delete resources
