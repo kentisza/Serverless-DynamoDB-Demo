@@ -1,5 +1,5 @@
 # Serverless-DynamoDB-Demo
-Uses the Serverless Framework to create a Lambda-backed API to record S3 objects in DynamoDB on AWS.
+Uses the Serverless Framework to create a Node.js Lambda-backed API to record S3 objects in DynamoDB on AWS.
 
 Lambda functions written in TypeScript.
 
