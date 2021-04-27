@@ -11,7 +11,7 @@ documentation:
         properties:
           error:
             type: "string"
-    - name: "PSUCreateRequest"
+    - name: "PSUCreateResponse"
       description: "Model for an S3 pre-signed URL"
       contentType: "application/json"
       schema:
@@ -19,30 +19,94 @@ documentation:
         properties:
           url:
             type: "string"
-    - name: "RecordList"
+    - name: "GetRecordList"
       description: "Model for a list of the S3 objects and their attributes"
       contentType: "application/json"
       schema:
         type: "object"
         properties:
-          bucketname:
+          sortorder:
             type: "string"
-          objectname:
+          pagination:
             type: "string"
-          mimetype:
-            type: "string"
-          uploadtimedate:
-            type: "string"
-    - name: "Record"
+          startkey:
+            type: "object"
+            properties:
+              bucketname:
+                type: "string"
+              uploadtimedate:
+                type: "string"
+#    - name: "startkey"
+#      description: "To continue the response from a previous query, use the values returned"
+#      contentType: "application/json"
+#      schema:
+#        type: "object"
+#        properties:
+#          bucketname:
+#            type: "string"
+#          uploadtimedate:
+#            type: "string"
+    - name: "GetRecordListResponse"
       description: "Model for a list of the S3 objects and their attributes"
       contentType: "application/json"
       schema:
         type: "object"
         properties:
-          bucketname:
-            type: "string"
+          Items: 
+            type: "object"
+            properties:
+              bucketname:
+                type: "string"
+              objectname:
+                type: "string"
+              filesize: 
+                type: "string" 
+              mimetype: 
+                type: "string"
+              uploadtimedate:
+                type: "string"
+          Count: 
+            type: "number"
+          ScannedCount: 
+            type: "number"
+          LastEvaluatedKey: 
+            type: "object"
+            properties:
+              bucketname:
+                type: "string"
+              uploadtimedate:
+                type: "string"
+    - name: "GetRecord"
+      description: "Model for a list of the S3 objects and their attributes"
+      contentType: "application/json"
+      schema:
+        type: "object"
+        properties:
           name:
             type: "string"
+    - name: "GetRecordResponse"
+      description: "Model for a list of the S3 objects and their attributes"
+      contentType: "application/json"
+      schema:
+        type: "object"
+        properties:
+          Items: 
+            type: "object"
+            properties:
+              bucketname:
+                type: "string"
+              objectname:
+                type: "string"
+              filesize: 
+                type: "string" 
+              mimetype: 
+                type: "string"
+              uploadtimedate:
+                type: "string"
+          Count: 
+            type: "number"
+          ScannedCount: 
+            type: "number"
 
 endpoints:
   genpsu:
@@ -51,20 +115,13 @@ endpoints:
     requestBody:
       description: "An object name to be used for upload to S3"
     requestModels:
-      application/json: "PutDocumentRequest"
-    queryParams:
-      - name: "object_key"
-        description: "The file name of the S3 object for which an S3 URL will be created"
-        schema:
-        type: "string"
-        pattern: "^[-a-z0-9_]+$"
-        required: true
+      application/json: "PSURequest"
     methodResponses:
       - statusCode: 201
         responseBody:
           description: "A pre-signed URL"
         responseModels:
-          application/json: "PSUCreateRequest"
+          application/json: "PSUCreateResponse"
       - statusCode: 500
         responseBody:
           description: "An error message when creating a pre-signed URL"
@@ -76,22 +133,13 @@ endpoints:
     requestBody:
       description: "The sortorder and pagination of the results"
     requestModels:
-      application/json: "PutDocumentRequest"
-    queryParams:
-      - name: "sortorder"
-        description: "Whether the results should be returned in ascending or descending order of upload time"
-        schema:
-        type: "string"
-        enum:
-          - "ascending"
-          - "descending"
-        required: true
+      application/json: "GetRecordListRequest"
     methodResponses:
       - statusCode: 201
         responseBody:
           description: "A list of S3 objects and attributes"
         responseModels:
-          application/json: "PSUCreateRequest"
+          application/json: "GetRecordListResponse"
       - statusCode: 500
         responseBody:
           description: "An error occurred when fetching the list of objects"
@@ -103,20 +151,13 @@ endpoints:
     requestBody:
       description: "The sortorder and pagination of the results"
     requestModels:
-      application/json: "PutDocumentRequest"
-    queryParams:
-      - name: "name"
-        description: "The name of the object which should be retrieved from DynamoDB"
-        schema:
-        type: "string"
-        pattern: "^[-a-z0-9_]+$"
-        required: true
+      application/json: "GetRecordRequest"
     methodResponses:
       - statusCode: 201
         responseBody:
           description: "An S3 object and attributes"
         responseModels:
-          application/json: "PSUCreateRequest"
+          application/json: "GetRecordResponse"
       - statusCode: 500
         responseBody:
           description: "An error occurred when fetching the object"
