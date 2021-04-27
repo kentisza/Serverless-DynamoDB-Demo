@@ -20,7 +20,7 @@ npm install -g serverless
 ```console
 npm install --production=false
 ```
-4) Edit 'serverless.yml' and change bucket name to be unique
+4) Edit 'serverless.yml' and change bucket name to be unique, for example by modifying the numbers at the end
 ```console
 custom:
   bucketName: ${self:service}-bucket-73734
