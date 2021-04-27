@@ -1,5 +1,7 @@
 # Serverless-DynamoDB-Demo
-Uses the Serverless Framework to create a Lambda-backed API to record S3 objects in DynamoDB
+Uses the Serverless Framework to create a Lambda-backed API to record S3 objects in DynamoDB on AWS.
+
+Lambda functions written in TypeScript.
 
 
 ![Architecture Diagram](https://github.com/kentisza/Serverless-DynamoDB-Demo/raw/main/Architecture.png?raw=true)
@@ -33,7 +35,7 @@ custom:
 serverless deploy --stage stage_name
 ```
 
-## To generate OpenAPI 3.0 Specification for the API Gateway enpoints:
+## To generate an OpenAPI 3.0 specification document for the API Gateway endpoints:
 
 1) (Optionally) Edit definitions for API resources which are defined in 'serverless.doc.yml'
 2) Use the openapi-documentation plugin to generate the OpenAPI specification documentation file 'openapi.yml'
