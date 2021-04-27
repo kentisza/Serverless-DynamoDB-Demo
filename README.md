@@ -45,7 +45,7 @@ aws s3 rm s3://serverless-s3-apigw-bucket-7354/ --recursive
 
 2) Delete resources
 ```console
-serverless deploy --stage stage_name
+serverless remove --stage stage_name
 ```
 
   If you missed step 1, you will receive error:
