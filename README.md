@@ -1,6 +1,7 @@
 # Serverless-DynamoDB-Demo
 Uses the Serverless Framework to create a Lambda-backed API to record S3 objects in DynamoDB
 
+
 ![Architecture Diagram](https://github.com/kentisza/Serverless-DynamoDB-Demo/raw/main/Architecture.png?raw=true)
 
 ## Setup:
